@@ -38,6 +38,11 @@
     object-fit: cover;
 }
 
+.gallery-card img:hover {
+    transform: scale(1.2);
+}
+
+
 .gallery-card span {
     color: #333333;
     font-size: 22px;
