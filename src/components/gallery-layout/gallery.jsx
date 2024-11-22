@@ -4,22 +4,17 @@ import axios from 'axios'
 
 function Gallery() {
 
-  const [loading, setLoading] = useState([]);
-  const [images, setImages] = useState([false]);
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');  
   
   useEffect(() => {
     const getAllImages = async () => {
       try {
-        const allImages = await axios.get(`https://api.unsplash.com/photos?page=100&per_page=150&client_id=${process.env.REACT_APP_API_KEY}`);
-        // console.log('Result ', allImages)
-        setImages(allImages.data);
-
+        const allImages = await axios.get(`https://api.unsplash.com/photos?page=${page}&per_page=12&client_id=${process.env.REACT_APP_API_KEY}`);
+        setImages((list) => [...list, ...allImages.data]);
         setLoading(true);
-        setTimeout(() => {
-          setLoading(false)
-        }, 2000)
-
       } catch (error) {
         console.log(error);
         setErrorMessage(error.message);
@@ -27,7 +22,20 @@ function Gallery() {
     };
     
     getAllImages();
-  }, [])
+  }, [page]);
+
+  const handleScroll = () => {
+    setTimeout(() => {
+      if(window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight) {
+        setLoading(false);
+        setPage((prev) => prev + 1);
+      }
+    }, 2000);
+  }
+
+  useEffect (() => {
+    window.addEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div>
@@ -39,27 +47,23 @@ function Gallery() {
                 </div>
               </>
           : 
-              <>
-                {
-                  loading ? 
-                  <div className='loading'>
-                    <h3>Images Loading ...</h3>
+              <div className='gallery-container'>
+              { images.map(image => {
+                return (
+                  <div className="gallery-card">
+                    <img src={image.urls.small} alt={image.alt_description} />
+                    <span>{image.user.first_name} {image.user.last_name}</span>
                   </div>
-                  : 
-                  <div className='gallery-container'>
-                  { images.map(image => {
-                    return (
-                      <div className="gallery-card">
-                        <img src={image.urls.small} alt={image.alt_description} />
-                        <span>{image.user.first_name} {image.user.last_name}</span>
-                      </div>
-                    );
-                  }
-                  )}
-                  </div>
-                }
-              </>  
-          }
+                );
+              }
+              )}
+              </div>                  
+            }
+            { loading && 
+              <div className="loading">
+                <h3>Loading ...</h3>
+              </div>
+            } 
     </div>
   );
 }
