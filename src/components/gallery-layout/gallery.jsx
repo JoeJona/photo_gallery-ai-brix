@@ -6,10 +6,7 @@ function Gallery() {
 
   const [loading, setLoading] = useState([]);
   const [images, setImages] = useState([false]);
-  const [errorMessage, setErrorMessage] = useState('');
-  
-  console.log('API_KEY ', process.env.REACT_APP_API_KEY);
-  
+  const [errorMessage, setErrorMessage] = useState('');  
   
   useEffect(() => {
     const getAllImages = async () => {
