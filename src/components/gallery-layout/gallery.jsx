@@ -14,8 +14,7 @@ function Gallery() {
   useEffect(() => {
     const getAllImages = async () => {
       try {
-        // const allImages = await axios.get(`https://api.unsplash.com/photos?page=100&per_page=150&client_id=${process.env.REACT_APP_API_KEY}`);
-        const allImages = await axios.get('https://api.unsplash.com/photos?page=100&per_page=150&client_id=SE16Ng2YTGykJz_XFcNMmPjp40u4fL6lZbhw5zR6omU');
+        const allImages = await axios.get(`https://api.unsplash.com/photos?page=100&per_page=150&client_id=${process.env.REACT_APP_API_KEY}`);
         // console.log('Result ', allImages)
         setImages(allImages.data);
 
